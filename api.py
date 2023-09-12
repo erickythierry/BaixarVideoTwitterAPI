@@ -57,14 +57,15 @@ def baixar_video():
     videoRandomID = str(uuid.uuid4()).rsplit('-', 1)[-1]
 
     if video_url:
-        if 'twitter.com' not in video_url:
-            return jsonify({'error': 'apenas videos do twitter.com'})
-        try:
-            download_video(video_url, videoRandomID)
-            file_url = f"{request.host_url}download/{videoRandomID}.mp4"
-            return jsonify({'file': file_url})
-        except:
-            return jsonify({'error': 'erro ao baixar'}), 400
+        if 'twitter.com' in video_url or 'x.com' in video_url:
+            try:
+                download_video(video_url, videoRandomID)
+                file_url = f"{request.host_url}download/{videoRandomID}.mp4"
+                return jsonify({'file': file_url})
+            except:
+                return jsonify({'error': 'erro ao baixar'}), 400
+        else:
+            return jsonify({'error': 'apenas videos do twitter/X'}), 401
 
     else:
         return jsonify({'error': 'URL inválida'}), 500
